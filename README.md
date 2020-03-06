@@ -118,6 +118,23 @@ yarn serve
 npm serve
 ```
 
+### Rotas da API
 
+#### Clientes
+| Method | URL | Controller |
+| --- | --- | --- |
+| get | /clients | ClientController@index |
+| get | /clients/{id} | ClientController@show |
+| post | /clients | ClientController@store |
+| put | /clients/{id} | ClientController@update |
+| delete | /clients/{id} | ClientController@destroy |
 
+#### Tags
+| Method | URL | Controller |
+| --- | --- | --- |
+| get | /tags | TagController@index |
+| get | /tags/{id} | TagController@show |
+| post | /tags | TagController@store |
+| put | /tags/{id} | TagController@update |
+| delete | /tags/{id} | TagController@destroy |
 
