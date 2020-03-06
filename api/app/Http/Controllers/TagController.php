@@ -14,7 +14,7 @@ class TagController extends Controller
      */
     public function index()
     {
-        return Tag::latest('id')->get();
+        return Tag::withCount('clients')->latest('id')->get();
     }
 
     /**

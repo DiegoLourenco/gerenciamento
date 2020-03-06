@@ -16,7 +16,7 @@ class Tag extends Model
     /**
      * The clients that belong to the tag.
      */
-    public function tags()
+    public function clients()
     {
         return $this->belongsToMany(Client::class, 'client_tag');
     }
