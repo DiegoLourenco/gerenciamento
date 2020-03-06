@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Client;
+use App\Tag;
 
 class ClientController extends Controller
 {
@@ -12,8 +13,15 @@ class ClientController extends Controller
      * 
      * @return Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->search) {
+            return Client::with('tags')
+                ->where('name', 'like', "%{$request->search}%")
+                ->orWhere('email', 'like', "%{$request->search}%")
+                ->orWhere('company', 'like', "%{$request->search}%")
+                ->latest('id')->get();
+        }
         return Client::with('tags')->latest('id')->get();
     }
 
@@ -40,10 +48,16 @@ class ClientController extends Controller
         $this->validate($request, [
             'name' => 'required|string',
             'email' => 'required|email|unique:clients,email',
-            'company' => 'required|string'
+            'company' => 'required|string',
+            'tags' => 'required|array'
         ]);
 
         $client = Client::create($request->all());
+
+        $tags = Tag::whereIn('name', $request->tags)->pluck('id');
+        $client->tags()->attach($tags);
+        $client->load('tags');
+
         return response()->json($client, 201);
     }
 
@@ -66,6 +80,8 @@ class ClientController extends Controller
             ?? abort(404, "Client not found!");
 
         $client->update($request->all());
+        $client->load("tags");
+
         return response()->json($client);
     }
 

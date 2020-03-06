@@ -12,8 +12,13 @@ class TagController extends Controller
      * 
      * @return Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->search) {
+            return Tag::withCount('clients')
+                ->where('name', 'like', "%{$request->search}%")
+                ->latest('id')->get();
+        }
         return Tag::withCount('clients')->latest('id')->get();
     }
 
@@ -42,6 +47,8 @@ class TagController extends Controller
         ]);
 
         $tag = Tag::create($request->all());
+        $tag = Tag::withCount('clients')->whereId($tag->id)->first();
+
         return response()->json($tag, 201);
     }
 
@@ -62,6 +69,8 @@ class TagController extends Controller
             ?? abort(404, "Tag not found!");
 
         $tag->update($request->all());
+        $tag = Tag::withCount('clients')->whereId($tag->id)->first();
+
         return response()->json($tag);
     }
 
@@ -75,7 +84,7 @@ class TagController extends Controller
     {
         $tag = Tag::find($id)
             ?? abort(404, "Tag not found!");
-            
+
         $tag->delete();
 
         return response()->json($tag);
