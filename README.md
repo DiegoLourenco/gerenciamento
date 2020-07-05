@@ -1,4 +1,4 @@
-# Desafio Ignição Digital
+# IG
 
 ## Requisitos
 
